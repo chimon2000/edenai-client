@@ -1,0 +1,87 @@
+{
+  "name": "@uptech/edenai-client",
+  "version": "1.0.0",
+  "description": "Eden AI Integration Module",
+  "author": "Uptech Studio",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    ".api/**/*",
+    "*.md"
+  ],
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "generate": "openapi-generator generate -i https://api.edenai.run/v2/info/schema -g typescript-axios --skip-validate-spec -o src/generated",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --passWithNoTests --coverage",
+    "test:cov:bail": "jest --coverage --passWithNoTests --bail src/ && lcov --remove coverage/lcov.info 'src/models/*' -o coverage/lcov.info",
+    "prepare": "if [[ $NODE_ENV != \"production\" ]]; then husky install; fi",
+    "prepublish": "npm run build",
+    "pre-commit": "lint-staged",
+    "changelog": "git cl full > CHANGELOG.md",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "lint:dry": "eslint \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.7.0",
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.4.2",
+    "@typescript-eslint/eslint-plugin": "^5.59.11",
+    "@typescript-eslint/parser": "^5.60.0",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-sonarjs": "^0.19.0",
+    "husky": "^8.0.3",
+    "jest": "^29.6.1",
+    "jest-mock-extended": "^3.0.4",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "axios": "^1.4.0"
+  },
+  "jest": {
+    "clearMocks": true,
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s",
+      "!**/*.mock(|s).(t|j)s",
+      "!**/dto/**"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "coverageReporters": [
+      "clover",
+      "json",
+      "lcov",
+      [
+        "text",
+        {
+          "skipFull": true
+        }
+      ]
+    ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --cache --fix",
+      "jest --bail --passWithNoTests --findRelatedTests"
+    ],
+    "*.{js,jsx,ts,tsx,css,scss,md,json}": "prettier --write"
+  }
+}
